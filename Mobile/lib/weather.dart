@@ -67,34 +67,48 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
                                 .toDouble(),
                         gridData: FlGridData(show: true), // Grid
                         titlesData: FlTitlesData(
-                          leftTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 40,
-                            getTextStyles: (context, value) => const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                              getTitlesWidget: (value, meta) {
+                                return SideTitleWidget(
+                                  axisSide: meta.axisSide,
+                                  child: Text(
+                                    '${value.toInt()}°C',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                );
+                              },
+                              interval: 10,
                             ),
-                            interval: 10,
-                            getTitles: (value) {
-                              return '${value.toInt()}°C';
-                            },
                           ),
-                          bottomTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 40,
-                            getTextStyles: (context, value) => const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                              getTitlesWidget: (value, meta) {
+                                int index = value.toInt();
+                                if (index >= 0 && index < dates.length) {
+                                  return SideTitleWidget(
+                                    axisSide: meta.axisSide,
+                                    child: Text(
+                                      dates[index].substring(5), // MM-DD
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              },
                             ),
-                            getTitles: (value) {
-                              int index = value.toInt();
-                              if (index >= 0 && index < dates.length) {
-                                return dates[index].substring(5); // MM-DD
-                              }
-                              return '';
-                            },
                           ),
                         ),
                         borderData: FlBorderData(
@@ -107,7 +121,8 @@ class _WeatherForecastPageState extends State<WeatherForecastPage> {
                               return FlSpot(e.key.toDouble(), e.value);
                             }).toList(),
                             isCurved: true,
-                            colors: [Colors.blue],
+                            color:
+                                Colors.blue, // Use `color` instead of `colors`
                             barWidth: 4,
                             dotData: FlDotData(show: true),
                             belowBarData: BarAreaData(show: false),
